@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 public class DbHandler extends SQLiteOpenHelper {
 
     private static final int VERSION = 1;
-    private static final String DB_NAME = "expenseDB";
+    private static final String DB_NAME = "200605M";
     private static final String TABLE_NAME_ACCOUNT = "account_table";
     private static final String TABLE_NAME_TRANSACTION = "transaction_table";
 
@@ -41,7 +41,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 ACCOUNT_NO + " TEXT, " +
                 BANK_NAME + " TEXT, " +
                 ACCOUNT_HOLDER + " TEXT, " +
-                BALANCE + " REAL);";
+                BALANCE + " REAL CHECK(balance>=0));";
 
         String table_transaction_create_query = "CREATE TABLE " + TABLE_NAME_TRANSACTION + " (" +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -56,22 +56,30 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
 
         String drop_table_query = "DROP TABLE IF EXISTS" ;
+
+        db.execSQL(drop_table_query + " transaction_table");
+        db.execSQL(drop_table_query + " account_table");
+        onCreate(db);
+
 
     }
 
     public void execute(String query, Object[] args){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL(query, args);
-        db.close();
+    }
+
+    public void execute(String query){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL(query);
     }
 
     public Cursor read(String query, String[] args) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(query, args);
-        db.close();
         return cursor;
     }
 

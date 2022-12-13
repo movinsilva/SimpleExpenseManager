@@ -63,9 +63,9 @@ public class InDBAccountDao implements AccountDAO {
         Account account = null;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             account = new Account(
-                    cursor.getString(cursor.getColumnIndex("accountNo")),
-                    cursor.getString(cursor.getColumnIndex("bankName")),
-                    cursor.getString(cursor.getColumnIndex("accountHolderName")),
+                    cursor.getString(cursor.getColumnIndex("account_no")),
+                    cursor.getString(cursor.getColumnIndex("bank_name")),
+                    cursor.getString(cursor.getColumnIndex("account_holder")),
                     cursor.getDouble(cursor.getColumnIndex("balance")));
             break;
         }
@@ -81,7 +81,7 @@ public class InDBAccountDao implements AccountDAO {
     public void addAccount(Account account) {
         try {
             Object[] args = {account.getAccountNo(), account.getBankName(), account.getAccountHolderName(), account.getBalance()};
-            String query = "INSERT INTO account_table VALUES(?, ?, ? ,?)";
+            String query = "INSERT INTO account_table (account_no, bank_name, account_holder, balance) VALUES(?, ?, ? ,?)";
             DbHandler dbHandler = new DbHandler(c);
             dbHandler.execute(query, args);
         } catch (Exception e){
@@ -123,7 +123,7 @@ public class InDBAccountDao implements AccountDAO {
             String query = "UPDATE account_table SET balance=" + account.getBalance() + " WHERE account_no=\'" +
                     accountNo + "\'";
             DbHandler dbHandler = new DbHandler(c);
-            dbHandler.execute(query, null);
+            dbHandler.execute(query);
         }  catch (Exception e){
             Log.e("exception in updating", e.getMessage());
         }

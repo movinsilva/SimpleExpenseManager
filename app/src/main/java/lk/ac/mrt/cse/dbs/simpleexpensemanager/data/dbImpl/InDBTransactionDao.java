@@ -28,7 +28,7 @@ public class InDBTransactionDao implements TransactionDAO {
         try {
             SimpleDateFormat date_formatter = new SimpleDateFormat("E, dd MMM yyyy");
             Object[] args = {date_formatter.format(date), expenseType.toString(), amount, accountNo};
-            String query = "INSERT INTO transaction_table VALUES(?, ?, ?, ?, ?)";
+            String query = "INSERT INTO transaction_table (date, type, amount, account_no) VALUES(?, ?, ?, ?)";
             DbHandler dbHandler = new DbHandler(c);
             dbHandler.execute(query, args);
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class InDBTransactionDao implements TransactionDAO {
 
             String dateString = cursor.getString(cursor.getColumnIndex("date"));
             try {
-                Date date = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z").parse(dateString);
+                Date date = new SimpleDateFormat("E, dd MMM yyyy").parse(dateString);
 
                 Transaction transaction = new Transaction(
                         date,
